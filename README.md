@@ -13,3 +13,9 @@ The application allows users to upload study materials or PDF documents and gene
 - FAISS
 - PyPDF
 - HuggingFace Embeddings
+
+## Module Completed
+
+### PDF Text Extraction System
+
+Implemented PDF document loading and text extraction using PyPDF. The system reads educational PDF documents and displays extracted content through the Streamlit interface.
