@@ -14,7 +14,7 @@ The application allows users to upload study materials or PDF documents and gene
 - PyPDF
 - HuggingFace Embeddings
 
-## Module Completed
+## Modules Completed
 
 ### 1) PDF Text Extraction System
 
