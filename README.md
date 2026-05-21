@@ -19,3 +19,9 @@ The application allows users to upload study materials or PDF documents and gene
 ### PDF Text Extraction System
 
 Implemented PDF document loading and text extraction using PyPDF. The system reads educational PDF documents and displays extracted content through the Streamlit interface.
+
+## Module Completed
+
+### Text Splitting & Chunk Generation System
+
+Implemented LangChain RecursiveCharacterTextSplitter for splitting large PDF text into smaller chunks. This workflow prepares document data for embeddings and semantic retrieval processes.
