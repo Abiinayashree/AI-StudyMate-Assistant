@@ -2,13 +2,15 @@ import streamlit as st
 from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
 
 st.title("AI StudyMate Assistant")
 
-st.subheader("Embeddings Generation System")
+st.subheader("FAISS Vector Database System")
 
 # Load PDF
-pdf = PdfReader("sample.pdf")
+pdf = PdfReader("documents/sample.pdf")
 
 # Extract text
 text = ""
@@ -24,19 +26,34 @@ splitter = RecursiveCharacterTextSplitter(
 
 chunks = splitter.split_text(text)
 
-# Load embedding model
+# Embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Generate embeddings
 embeddings = model.encode(chunks)
 
-# Display embedding count
-st.write("Total Embeddings Generated:", len(embeddings))
+# Convert to numpy
+embedding_array = np.array(embeddings)
+
+# Create FAISS index
+dimension = embedding_array.shape[1]
+
+index = faiss.IndexFlatL2(dimension)
+
+# Store embeddings
+index.add(embedding_array)
+
+# Display results
+st.write("Total Chunks:", len(chunks))
+
+st.write("Total Embeddings Stored:", index.ntotal)
 
 # Display sample chunk
 st.subheader("Sample Chunk")
+
 st.write(chunks[0])
 
 # Display sample embedding
 st.subheader("Sample Embedding Vector")
-st.write(embeddings[0])
+
+st.write(embeddings[0][:10])
