@@ -2,7 +2,7 @@ from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Load PDF
-pdf = PdfReader("sample.pdf")
+pdf = PdfReader("documents/sample.pdf")
 
 # Extract text
 text = ""
