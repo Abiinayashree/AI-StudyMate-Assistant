@@ -3,7 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 
 # Load PDF
-pdf = PdfReader("sample.pdf")
+pdf = PdfReader("documents/sample.pdf")
 
 # Extract text
 text = ""
