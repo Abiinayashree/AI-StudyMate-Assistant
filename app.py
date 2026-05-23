@@ -7,7 +7,7 @@ import numpy as np
 
 st.title("AI StudyMate Assistant")
 
-st.subheader("FAISS Vector Database System")
+st.subheader("Semantic Search & Retrieval System")
 
 # Load PDF
 pdf = PdfReader("documents/sample.pdf")
@@ -26,13 +26,12 @@ splitter = RecursiveCharacterTextSplitter(
 
 chunks = splitter.split_text(text)
 
-# Embedding model
+# Load model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Generate embeddings
 embeddings = model.encode(chunks)
 
-# Convert to numpy
 embedding_array = np.array(embeddings)
 
 # Create FAISS index
@@ -40,20 +39,26 @@ dimension = embedding_array.shape[1]
 
 index = faiss.IndexFlatL2(dimension)
 
-# Store embeddings
 index.add(embedding_array)
 
-# Display results
-st.write("Total Chunks:", len(chunks))
+# User input
+query = st.text_input("Ask Question From PDF")
 
-st.write("Total Embeddings Stored:", index.ntotal)
+if query:
 
-# Display sample chunk
-st.subheader("Sample Chunk")
+    # Query embedding
+    query_embedding = model.encode([query])
 
-st.write(chunks[0])
+    # Search
+    k = 2
 
-# Display sample embedding
-st.subheader("Sample Embedding Vector")
+    distances, indices = index.search(
+        np.array(query_embedding),
+        k
+    )
 
-st.write(embeddings[0][:10])
+    st.subheader("Top Matching Results")
+
+    for i in indices[0]:
+        st.write(chunks[i])
+        st.write("-------------------")
