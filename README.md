@@ -27,3 +27,7 @@ Implemented LangChain RecursiveCharacterTextSplitter for splitting large PDF tex
 ### FAISS Vector Database Integration
 
 Implemented vector database integration using FAISS for storing semantic embeddings generated from document chunks. This module forms the retrieval foundation for Retrieval-Augmented Generation (RAG) workflows.
+
+### Semantic Search & Retrieval System
+
+Implemented semantic retrieval workflow using FAISS vector database and Sentence Transformers for context-aware document search and intelligent chunk retrieval.
