@@ -1,9 +1,9 @@
 streamlit
 langchain
-groq
 langchain-community
-faiss-cpu
+langchain-text-splitters
 pypdf
 sentence-transformers
-langchain-text-splitters
+faiss-cpu
 numpy
+groq
