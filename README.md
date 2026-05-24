@@ -1,33 +1,59 @@
 # AI StudyMate Assistant
 
-AI StudyMate Assistant is an AI-powered educational document intelligence system built using LangChain, Groq API, Streamlit, and FAISS.
+AI StudyMate Assistant is an AI-powered educational document intelligence system developed using LangChain, Streamlit, Sentence Transformers, FAISS Vector Database, and Retrieval-Augmented Generation (RAG) architecture.
 
-The application allows users to upload study materials or PDF documents and generate AI-powered summaries, important notes, quiz questions, and contextual answers using Retrieval-Augmented Generation (RAG) architecture.
+The application processes uploaded PDF documents, generates semantic embeddings, performs intelligent chunk retrieval, and enables contextual semantic search using vector similarity workflows.
+
+
+## Features
+
+- PDF Text Extraction
+- Text Splitting & Chunk Generation
+- Semantic Embeddings Generation
+- FAISS Vector Database Integration
+- Semantic Search & Retrieval
+- Streamlit-Based User Interface
+
 
 ## Technologies Used
 
 - Python
-- LangChain
 - Streamlit
-- Groq API
-- FAISS
+- LangChain
 - PyPDF
-- HuggingFace Embeddings
+- Sentence Transformers
+- FAISS
+- NumPy
+
+
+## Project Workflow
+
+PDF Upload
+↓
+Text Extraction
+↓
+Chunk Generation
+↓
+Embeddings Creation
+↓
+FAISS Vector Storage
+↓
+Semantic Retrieval
+
 
 ## Modules Completed
 
-### PDF Text Extraction System
+- PDF Extraction Module
+- Text Splitting Module
+- Embeddings Generation Module
+- FAISS Vector Database Module
+- Semantic Retrieval Module
 
-Implemented PDF document loading and text extraction using PyPDF. The system reads educational PDF documents and displays extracted content through the Streamlit interface.
 
-### Text Splitting & Chunk Generation System
+## Future Enhancements
 
-Implemented LangChain RecursiveCharacterTextSplitter for splitting large PDF text into smaller chunks. This workflow prepares document data for embeddings and semantic retrieval processes.
-
-### FAISS Vector Database Integration
-
-Implemented vector database integration using FAISS for storing semantic embeddings generated from document chunks. This module forms the retrieval foundation for Retrieval-Augmented Generation (RAG) workflows.
-
-### Semantic Search & Retrieval System
-
-Implemented semantic retrieval workflow using FAISS vector database and Sentence Transformers for context-aware document search and intelligent chunk retrieval.
+- Groq LLM Integration
+- AI Question Answering
+- AI Summarization
+- Quiz Generation
+- Chat-Based PDF Assistant
