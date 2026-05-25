@@ -57,3 +57,10 @@ Semantic Retrieval
 - AI Summarization
 - Quiz Generation
 - Chat-Based PDF Assistant
+
+
+## New Feature Added
+
+### AI-Powered Question Answering
+
+Integrated Groq LLM with Retrieval-Augmented Generation (RAG) workflow to generate intelligent answers from uploaded PDF documents.
