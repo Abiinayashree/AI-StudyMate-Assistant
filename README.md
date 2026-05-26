@@ -59,8 +59,12 @@ Semantic Retrieval
 - Chat-Based PDF Assistant
 
 
-## New Feature Added
+## New Features Added
 
 ### AI-Powered Question Answering
 
 Integrated Groq LLM with Retrieval-Augmented Generation (RAG) workflow to generate intelligent answers from uploaded PDF documents.
+
+### Conversational AI Memory System
+
+Implemented conversational memory workflow for maintaining contextual multi-turn interactions in the AI StudyMate Assistant.
