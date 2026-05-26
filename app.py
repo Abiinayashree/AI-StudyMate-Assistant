@@ -6,7 +6,6 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import faiss
 import numpy as np
-import os
 
 # Load environment variables
 load_dotenv()
@@ -14,9 +13,13 @@ load_dotenv()
 # Streamlit title
 st.title("AI StudyMate Assistant")
 
-st.subheader("AI-Powered PDF Question Answering System")
+st.subheader("Conversational AI PDF Assistant")
 
-# Read PDF
+# Chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Load PDF
 pdf = PdfReader("documents/sample.pdf")
 
 text = ""
@@ -41,22 +44,27 @@ embeddings = embedding_model.encode(chunks)
 
 embedding_array = np.array(embeddings)
 
-# FAISS database
+# FAISS index
 index = faiss.IndexFlatL2(
     embedding_array.shape[1]
 )
 
 index.add(embedding_array)
 
-# Load Groq model
+# Groq model
 llm = ChatGroq(
     model_name="llama-3.3-70b-versatile"
 )
 
 # User input
-query = st.text_input("Ask Question From PDF")
+query = st.chat_input("Ask Question From PDF")
 
 if query:
+
+    # Store user message
+    st.session_state.messages.append(
+        {"role": "user", "content": query}
+    )
 
     # Query embedding
     query_embedding = embedding_model.encode([query])
@@ -72,21 +80,40 @@ if query:
     for i in indices[0]:
         retrieved_text += chunks[i]
 
+    # Conversation history
+    history = ""
+
+    for msg in st.session_state.messages:
+        history += f"{msg['role']}: {msg['content']}\n"
+
     # Prompt
     prompt = f"""
-    Answer the question based on the context below.
+    You are an AI Study Assistant.
+
+    Previous Conversation:
+    {history}
 
     Context:
     {retrieved_text}
 
-    Question:
+    User Question:
     {query}
+
+    Give a helpful answer.
     """
 
     # AI response
     response = llm.invoke(prompt)
 
-    # Display answer
-    st.subheader("AI Answer")
+    answer = response.content
 
-    st.write(response.content)
+    # Store AI response
+    st.session_state.messages.append(
+        {"role": "assistant", "content": answer}
+    )
+
+# Display chat
+for msg in st.session_state.messages:
+
+    with st.chat_message(msg["role"]):
+        st.write(msg["content"])
