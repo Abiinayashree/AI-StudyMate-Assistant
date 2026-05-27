@@ -68,3 +68,7 @@ Integrated Groq LLM with Retrieval-Augmented Generation (RAG) workflow to genera
 ### Conversational AI Memory System
 
 Implemented conversational memory workflow for maintaining contextual multi-turn interactions in the AI StudyMate Assistant.
+
+### Source Chunk Display
+
+Implemented contextual source chunk visualization for improving retrieval transparency and answer validation.
