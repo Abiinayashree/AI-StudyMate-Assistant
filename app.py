@@ -6,135 +6,144 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import faiss
 import numpy as np
+import tempfile
 
-# Load environment variables
+# Load env
 load_dotenv()
 
-# Streamlit UI
+# Title
 st.title("AI StudyMate Assistant")
 
-st.caption("AI-powered Conversational PDF Assistant using RAG")
+st.caption("Multi PDF Conversational AI System")
 
-st.subheader("Conversational AI PDF Chatbot")
+# Upload PDF
+uploaded_files = st.file_uploader(
+    "Upload PDF Files",
+    type="pdf",
+    accept_multiple_files=True
+)
 
 # Chat memory
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Load PDF
-pdf = PdfReader("documents/sample.pdf")
+# Process only if files uploaded
+if uploaded_files:
 
-# Extract text
-text = ""
+    full_text = ""
 
-for page in pdf.pages:
-    text += page.extract_text()
+    # Read all PDFs
+    for uploaded_file in uploaded_files:
 
-# Text splitter
-splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=50
-)
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=".pdf"
+        ) as temp_file:
 
-# Create chunks
-chunks = splitter.split_text(text)
+            temp_file.write(uploaded_file.read())
 
-# Embedding model
-embedding_model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
-)
+            pdf = PdfReader(temp_file.name)
 
-# Generate embeddings
-embeddings = embedding_model.encode(chunks)
+            for page in pdf.pages:
+                full_text += page.extract_text()
 
-embedding_array = np.array(embeddings)
-
-# Create FAISS index
-index = faiss.IndexFlatL2(
-    embedding_array.shape[1]
-)
-
-# Store embeddings
-index.add(embedding_array)
-
-# Load Groq LLM
-llm = ChatGroq(
-    model_name="llama-3.3-70b-versatile"
-)
-
-# User input
-query = st.chat_input("Ask Question From PDF")
-
-if query:
-
-    # Store user message
-    st.session_state.messages.append(
-        {
-            "role": "user",
-            "content": query
-        }
+    # Split text
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=50
     )
 
-    # Convert query to embedding
-    query_embedding = embedding_model.encode([query])
+    chunks = splitter.split_text(full_text)
 
-    # Retrieve relevant chunks
-    distances, indices = index.search(
-        np.array(query_embedding),
-        2
+    # Embedding model
+    embedding_model = SentenceTransformer(
+        "all-MiniLM-L6-v2"
     )
 
-    # Store retrieved text
-    retrieved_text = ""
+    embeddings = embedding_model.encode(chunks)
 
-    for i in indices[0]:
-        retrieved_text += chunks[i] + "\n\n"
+    embedding_array = np.array(embeddings)
 
-    # Conversation history
-    history = ""
+    # FAISS index
+    index = faiss.IndexFlatL2(
+        embedding_array.shape[1]
+    )
 
+    index.add(embedding_array)
+
+    # LLM
+    llm = ChatGroq(
+        model_name="llama-3.3-70b-versatile"
+    )
+
+    # Chat input
+    query = st.chat_input(
+        "Ask Question From PDFs"
+    )
+
+    if query:
+
+        st.session_state.messages.append(
+            {
+                "role": "user",
+                "content": query
+            }
+        )
+
+        # Query embedding
+        query_embedding = embedding_model.encode([query])
+
+        # Search
+        distances, indices = index.search(
+            np.array(query_embedding),
+            2
+        )
+
+        retrieved_text = ""
+
+        for i in indices[0]:
+            retrieved_text += chunks[i] + "\n\n"
+
+        # History
+        history = ""
+
+        for msg in st.session_state.messages:
+            history += f"{msg['role']}: {msg['content']}\n"
+
+        # Prompt
+        prompt = f"""
+        You are an AI Study Assistant.
+
+        Previous Conversation:
+        {history}
+
+        Context:
+        {retrieved_text}
+
+        User Question:
+        {query}
+
+        Give answer only from context.
+        """
+
+        # AI response
+        response = llm.invoke(prompt)
+
+        answer = response.content
+
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": answer
+            }
+        )
+
+    # Display chat
     for msg in st.session_state.messages:
-        history += f"{msg['role']}: {msg['content']}\n"
 
-    # Prompt
-    prompt = f"""
-    You are an AI Study Assistant.
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
 
-    Previous Conversation:
-    {history}
+else:
 
-    Context:
-    {retrieved_text}
-
-    User Question:
-    {query}
-
-    Give a helpful answer based on the context.
-    """
-
-    # Generate AI response
-    response = llm.invoke(prompt)
-
-    answer = response.content
-
-    # Store AI answer
-    st.session_state.messages.append(
-        {
-            "role": "assistant",
-            "content": answer
-        }
-    )
-
-    # Store retrieved context
-    st.session_state.messages.append(
-        {
-            "role": "assistant",
-            "content": f"Retrieved Context:\n\n{retrieved_text}"
-        }
-    )
-
-# Display conversation
-for msg in st.session_state.messages:
-
-    with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+    st.info("Please upload PDF files.")
