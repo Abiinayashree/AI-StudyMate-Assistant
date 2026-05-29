@@ -14,7 +14,7 @@ load_dotenv()
 # Title
 st.title("AI StudyMate Assistant")
 
-st.caption("Multi PDF Conversational AI System")
+st.caption("Conversational Multi-PDF RAG Assistant")
 
 # Upload PDF
 uploaded_files = st.file_uploader(
@@ -26,6 +26,13 @@ uploaded_files = st.file_uploader(
 # Chat memory
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+# Clear chat button
+if st.button("Clear Conversation"):
+
+    st.session_state.messages = []
+
+    st.rerun()    
 
 # Process only if files uploaded
 if uploaded_files:
