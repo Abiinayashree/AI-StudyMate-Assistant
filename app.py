@@ -27,12 +27,15 @@ with st.sidebar:
 
     st.subheader("System Status")
 
-    st.write("🟢 Vector Database Ready")
-    st.write("🟢 Embeddings Active")
-    st.write("🟢 Groq LLM Connected")
+    st.success("PDF Processing Ready")
 
+    st.success("Embeddings Generated")
 
-st.caption("AI-Powered Multi-PDF Conversational RAG AssistantS")
+    st.success("Vector Database Active")
+
+    st.success("AI Assistant Ready")
+
+    st.caption("AI-Powered Multi-PDF Conversational RAG AssistantS")
 
 
 # Upload PDF

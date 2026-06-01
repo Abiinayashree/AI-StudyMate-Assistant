@@ -92,3 +92,7 @@ Added a professional sidebar displaying project features, AI system status, and 
 ### Uploaded PDF Display System
 
 Implemented uploaded PDF name visualization for improving document tracking and user experience.
+
+### System Status Panel
+
+Added a system status panel in the sidebar to display PDF processing, embeddings generation, vector database readiness, and AI assistant availability.
