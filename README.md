@@ -100,3 +100,7 @@ Added a system status panel in the sidebar to display PDF processing, embeddings
 ### Chat Statistics Panel
 
 Implemented chat analytics to display total messages, user questions, and AI responses for better conversation tracking.
+
+### Source Context Display
+
+Implemented retrieved source context visualization to improve answer transparency and explainability in the RAG workflow.

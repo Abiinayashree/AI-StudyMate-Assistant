@@ -217,6 +217,11 @@ Answer only from the provided context.
                 "content": answer
             }
         )
+        source_text = (
+            "📄 Retrieved Context:\n\n"
+            + retrieved_text
+        )
+
 
     # Display Chat
     for msg in st.session_state.messages:
