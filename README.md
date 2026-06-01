@@ -55,51 +55,20 @@ Supporting Libraries
 
 # Key Features
 
-PDF Processing
+## Key Features
 
-- Upload and process multiple PDF documents
-- Extract text content from educational materials
-
-Text Chunking
-
-- Split large documents into manageable chunks
-- Preserve contextual information using chunk overlap
-
-Embeddings Generation
-
-- Convert text into vector representations
-- Enable semantic understanding of content
-
-Vector Database Integration
-
-- Store embeddings using FAISS
-- Perform efficient similarity search
-
-Semantic Retrieval
-
-- Retrieve relevant content based on user queries
-- Context-aware document search
-
-AI Question Answering
-
-- Generate intelligent responses using Groq LLM
-- Answer questions using retrieved document context
-
-Conversational Memory
-
-- Maintain chat history
-- Support multi-turn conversations
-
-Multi-PDF Support
-
-- Process multiple documents simultaneously
-- Search across all uploaded documents
-
-User-Friendly Interface
-
-- Streamlit-based interactive web application
-- Chat-style user experience
-- Sidebar with project information and statistics
+- Multi-PDF Upload
+- PDF Text Extraction
+- Text Chunking
+- Embedding Generation
+- FAISS Vector Database Integration
+- Semantic Search
+- Context Retrieval
+- AI Question Answering
+- Conversational Memory
+- Chat History Management
+- Streamlit User Interface
+- Chat Statistics Dashboard
 
 ---
 
@@ -175,7 +144,7 @@ Generate and display a contextual AI response.
 
 Clone Repository
 
-git clone https://github.com/your-username/AI-StudyMate-Assistant.git
+git clone https://github.com/Abiinayashree/AI-StudyMate-Assistant.git
 
 Navigate to Project Folder
 
