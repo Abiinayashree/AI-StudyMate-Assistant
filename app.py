@@ -14,7 +14,25 @@ load_dotenv()
 # Title
 st.title("AI StudyMate Assistant")
 
-st.caption("Conversational Multi-PDF RAG Assistant")
+with st.sidebar:
+
+    st.title("📚 AI StudyMate Assistant")
+
+    st.subheader("Features")
+
+    st.write("✅ Multi PDF Upload")
+    st.write("✅ Semantic Search")
+    st.write("✅ AI Question Answering")
+    st.write("✅ Conversational Memory")
+
+    st.subheader("System Status")
+
+    st.write("🟢 Vector Database Ready")
+    st.write("🟢 Embeddings Active")
+    st.write("🟢 Groq LLM Connected")
+
+
+st.caption("AI-Powered Multi-PDF Conversational RAG AssistantS")
 
 
 # Upload PDF
