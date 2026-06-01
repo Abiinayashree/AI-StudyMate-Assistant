@@ -16,6 +16,7 @@ st.title("AI StudyMate Assistant")
 
 st.caption("Conversational Multi-PDF RAG Assistant")
 
+
 # Upload PDF
 uploaded_files = st.file_uploader(
     "Upload PDF Files",
@@ -61,6 +62,14 @@ if uploaded_files:
     )
 
     chunks = splitter.split_text(full_text)
+
+    st.success(
+    f"Total PDFs Uploaded: {len(uploaded_files)}"
+    )
+
+    st.success(
+    f"Total Chunks Created: {len(chunks)}"
+)
 
     # Embedding model
     embedding_model = SentenceTransformer(
