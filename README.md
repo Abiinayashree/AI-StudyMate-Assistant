@@ -69,6 +69,7 @@ Supporting Libraries
 - Chat History Management
 - Streamlit User Interface
 - Chat Statistics Dashboard
+- AI Summary Generation
 
 ---
 
@@ -208,7 +209,6 @@ Project Status: Active Development Core RAG workflow completed successfully.Addi
 
 Planned improvements include:
 
-- AI Summary Generation
 - Important Notes Extraction
 - Quiz Generation
 - Chapter-wise Summaries

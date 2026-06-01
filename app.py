@@ -11,57 +11,52 @@ import tempfile
 # Load environment variables
 load_dotenv()
 
-# Initialize chat memory
+# Chat memory initialization
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # Title
-st.title("AI StudyMate Assistant")
+st.title("📚 AI StudyMate Assistant")
 
 # Sidebar
 with st.sidebar:
 
-    st.title("📚 AI StudyMate Assistant")
-
-    st.subheader("Features")
+    st.header("Features")
 
     st.write("✅ Multi PDF Upload")
     st.write("✅ Semantic Search")
     st.write("✅ AI Question Answering")
     st.write("✅ Conversational Memory")
+    st.write("✅ AI Summary Generation")
 
-    st.subheader("System Status")
-
+    st.header("System Status")
+   
     st.success("PDF Processing Ready")
     st.success("Embeddings Generated")
     st.success("Vector Database Active")
     st.success("AI Assistant Ready")
 
-    st.subheader("Chat Statistics")
+    st.header("Chat Statistics")
 
     total_messages = len(st.session_state.messages)
 
     user_messages = len(
-        [
-            msg for msg in st.session_state.messages
-            if msg["role"] == "user"
-        ]
+        [msg for msg in st.session_state.messages
+         if msg["role"] == "user"]
     )
 
     assistant_messages = len(
-        [
-            msg for msg in st.session_state.messages
-            if msg["role"] == "assistant"
-        ]
+        [msg for msg in st.session_state.messages
+         if msg["role"] == "assistant"]
     )
 
     st.write(f"Total Messages: {total_messages}")
     st.write(f"User Questions: {user_messages}")
     st.write(f"AI Responses: {assistant_messages}")
 
-    st.caption(
-        "AI-Powered Multi-PDF Conversational RAG Assistant"
-    )
+    st.caption("AI-Powwred Multi-PDF Conversational RAG Assistant")
+
+    
 
 # Upload PDFs
 uploaded_files = st.file_uploader(
@@ -70,14 +65,11 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True
 )
 
-# Clear Conversation
+# Clear Chat
 if st.button("Clear Conversation"):
-
     st.session_state.messages = []
-
     st.rerun()
 
-# Process PDFs
 if uploaded_files:
 
     st.subheader("📂 Uploaded Files")
@@ -122,17 +114,14 @@ if uploaded_files:
         f"Total Chunks Created: {len(chunks)}"
     )
 
-    # Embeddings
+    # Embedding model
     embedding_model = SentenceTransformer(
         "all-MiniLM-L6-v2"
     )
 
     embeddings = embedding_model.encode(chunks)
 
-    embedding_array = np.array(
-        embeddings,
-        dtype=np.float32
-    )
+    embedding_array = np.array(embeddings)
 
     # FAISS
     index = faiss.IndexFlatL2(
@@ -141,10 +130,34 @@ if uploaded_files:
 
     index.add(embedding_array)
 
-    # Groq LLM
+    # LLM
     llm = ChatGroq(
         model_name="llama-3.3-70b-versatile"
     )
+
+    # SUMMARY FEATURE
+    if st.button("📄 Generate Summary"):
+
+        summary_prompt = f"""
+        Summarize the following educational content:
+
+        {full_text[:5000]}
+
+        Provide:
+        1. Main Topic
+        2. Key Points
+        3. Short Conclusion
+        """
+
+        summary_response = llm.invoke(
+            summary_prompt
+        )
+
+        st.subheader("📄 AI Summary")
+
+        st.write(
+            summary_response.content
+        )
 
     # Chat Input
     query = st.chat_input(
@@ -160,19 +173,12 @@ if uploaded_files:
             }
         )
 
-        # Query embedding
         query_embedding = embedding_model.encode(
             [query]
         )
 
-        query_embedding = np.array(
-            query_embedding,
-            dtype=np.float32
-        )
-
-        # Search
         distances, indices = index.search(
-            query_embedding,
+            np.array(query_embedding),
             2
         )
 
@@ -181,31 +187,28 @@ if uploaded_files:
         for i in indices[0]:
             retrieved_text += chunks[i] + "\n\n"
 
-        # History
         history = ""
 
         for msg in st.session_state.messages:
-
             history += (
                 f"{msg['role']}: "
                 f"{msg['content']}\n"
             )
 
-        # Prompt
         prompt = f"""
-You are an AI Study Assistant.
+        You are an AI Study Assistant.
 
-Previous Conversation:
-{history}
+        Previous Conversation:
+        {history}
 
-Context:
-{retrieved_text}
+        Context:
+        {retrieved_text}
 
-User Question:
-{query}
+        User Question:
+        {query}
 
-Answer only from the provided context.
-"""
+        Answer only from the context.
+        """
 
         response = llm.invoke(prompt)
 
@@ -217,19 +220,16 @@ Answer only from the provided context.
                 "content": answer
             }
         )
-        source_text = (
-            "📄 Retrieved Context:\n\n"
-            + retrieved_text
-        )
 
-
-    # Display Chat
+    # Display chat history
     for msg in st.session_state.messages:
 
         with st.chat_message(
             msg["role"]
         ):
-            st.write(msg["content"])
+            st.write(
+                msg["content"]
+            )
 
 else:
 
