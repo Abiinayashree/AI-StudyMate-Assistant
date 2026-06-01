@@ -96,3 +96,7 @@ Implemented uploaded PDF name visualization for improving document tracking and 
 ### System Status Panel
 
 Added a system status panel in the sidebar to display PDF processing, embeddings generation, vector database readiness, and AI assistant availability.
+
+### Chat Statistics Panel
+
+Implemented chat analytics to display total messages, user questions, and AI responses for better conversation tracking.

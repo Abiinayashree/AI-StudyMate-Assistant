@@ -8,12 +8,17 @@ import faiss
 import numpy as np
 import tempfile
 
-# Load env
+# Load environment variables
 load_dotenv()
+
+# Initialize chat memory
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # Title
 st.title("AI StudyMate Assistant")
 
+# Sidebar
 with st.sidebar:
 
     st.title("📚 AI StudyMate Assistant")
@@ -28,45 +33,61 @@ with st.sidebar:
     st.subheader("System Status")
 
     st.success("PDF Processing Ready")
-
     st.success("Embeddings Generated")
-
     st.success("Vector Database Active")
-
     st.success("AI Assistant Ready")
 
-    st.caption("AI-Powered Multi-PDF Conversational RAG AssistantS")
+    st.subheader("Chat Statistics")
 
+    total_messages = len(st.session_state.messages)
 
-# Upload PDF
+    user_messages = len(
+        [
+            msg for msg in st.session_state.messages
+            if msg["role"] == "user"
+        ]
+    )
+
+    assistant_messages = len(
+        [
+            msg for msg in st.session_state.messages
+            if msg["role"] == "assistant"
+        ]
+    )
+
+    st.write(f"Total Messages: {total_messages}")
+    st.write(f"User Questions: {user_messages}")
+    st.write(f"AI Responses: {assistant_messages}")
+
+    st.caption(
+        "AI-Powered Multi-PDF Conversational RAG Assistant"
+    )
+
+# Upload PDFs
 uploaded_files = st.file_uploader(
     "Upload PDF Files",
     type="pdf",
     accept_multiple_files=True
 )
+
+# Clear Conversation
+if st.button("Clear Conversation"):
+
+    st.session_state.messages = []
+
+    st.rerun()
+
+# Process PDFs
 if uploaded_files:
 
     st.subheader("📂 Uploaded Files")
 
     for file in uploaded_files:
         st.write(file.name)
-# Chat memory
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Clear chat button
-if st.button("Clear Conversation"):
-
-    st.session_state.messages = []
-
-    st.rerun()    
-
-# Process only if files uploaded
-if uploaded_files:
 
     full_text = ""
 
-    # Read all PDFs
+    # Read PDFs
     for uploaded_file in uploaded_files:
 
         with tempfile.NamedTemporaryFile(
@@ -79,7 +100,11 @@ if uploaded_files:
             pdf = PdfReader(temp_file.name)
 
             for page in pdf.pages:
-                full_text += page.extract_text()
+
+                text = page.extract_text()
+
+                if text:
+                    full_text += text
 
     # Split text
     splitter = RecursiveCharacterTextSplitter(
@@ -90,35 +115,38 @@ if uploaded_files:
     chunks = splitter.split_text(full_text)
 
     st.success(
-    f"Total PDFs Uploaded: {len(uploaded_files)}"
+        f"Total PDFs Uploaded: {len(uploaded_files)}"
     )
 
     st.success(
-    f"Total Chunks Created: {len(chunks)}"
-)
+        f"Total Chunks Created: {len(chunks)}"
+    )
 
-    # Embedding model
+    # Embeddings
     embedding_model = SentenceTransformer(
         "all-MiniLM-L6-v2"
     )
 
     embeddings = embedding_model.encode(chunks)
 
-    embedding_array = np.array(embeddings)
+    embedding_array = np.array(
+        embeddings,
+        dtype=np.float32
+    )
 
-    # FAISS index
+    # FAISS
     index = faiss.IndexFlatL2(
         embedding_array.shape[1]
     )
 
     index.add(embedding_array)
 
-    # LLM
+    # Groq LLM
     llm = ChatGroq(
         model_name="llama-3.3-70b-versatile"
     )
 
-    # Chat input
+    # Chat Input
     query = st.chat_input(
         "Ask Question From PDFs"
     )
@@ -133,11 +161,18 @@ if uploaded_files:
         )
 
         # Query embedding
-        query_embedding = embedding_model.encode([query])
+        query_embedding = embedding_model.encode(
+            [query]
+        )
+
+        query_embedding = np.array(
+            query_embedding,
+            dtype=np.float32
+        )
 
         # Search
         distances, indices = index.search(
-            np.array(query_embedding),
+            query_embedding,
             2
         )
 
@@ -150,25 +185,28 @@ if uploaded_files:
         history = ""
 
         for msg in st.session_state.messages:
-            history += f"{msg['role']}: {msg['content']}\n"
+
+            history += (
+                f"{msg['role']}: "
+                f"{msg['content']}\n"
+            )
 
         # Prompt
         prompt = f"""
-        You are an AI Study Assistant.
+You are an AI Study Assistant.
 
-        Previous Conversation:
-        {history}
+Previous Conversation:
+{history}
 
-        Context:
-        {retrieved_text}
+Context:
+{retrieved_text}
 
-        User Question:
-        {query}
+User Question:
+{query}
 
-        Give answer only from context.
-        """
+Answer only from the provided context.
+"""
 
-        # AI response
         response = llm.invoke(prompt)
 
         answer = response.content
@@ -180,12 +218,16 @@ if uploaded_files:
             }
         )
 
-    # Display chat
+    # Display Chat
     for msg in st.session_state.messages:
 
-        with st.chat_message(msg["role"]):
+        with st.chat_message(
+            msg["role"]
+        ):
             st.write(msg["content"])
 
 else:
 
-    st.info("Please upload PDF files.")
+    st.info(
+        "Please upload PDF files."
+    )
