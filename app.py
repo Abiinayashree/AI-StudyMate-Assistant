@@ -41,7 +41,12 @@ uploaded_files = st.file_uploader(
     type="pdf",
     accept_multiple_files=True
 )
+if uploaded_files:
 
+    st.subheader("📂 Uploaded Files")
+
+    for file in uploaded_files:
+        st.write(file.name)
 # Chat memory
 if "messages" not in st.session_state:
     st.session_state.messages = []

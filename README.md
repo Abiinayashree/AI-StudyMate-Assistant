@@ -88,3 +88,7 @@ Implemented PDF upload statistics and chunk generation monitoring for improving 
 ### Sidebar Information Panel
 
 Added a professional sidebar displaying project features, AI system status, and application information for improved user experience.
+
+### Uploaded PDF Display System
+
+Implemented uploaded PDF name visualization for improving document tracking and user experience.
