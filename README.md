@@ -50,16 +50,7 @@ Semantic Retrieval
 - Semantic Retrieval Module
 
 
-## Future Enhancements
-
-- Groq LLM Integration
-- AI Question Answering
-- AI Summarization
-- Quiz Generation
-- Chat-Based PDF Assistant
-
-
-## New Features Added
+### Features Added
 
 ### AI-Powered Question Answering
 
@@ -117,3 +108,12 @@ The AI StudyMate Assistant successfully supports:
 - Source Context Display
 - Chat Statistics
 - System Status Monitoring
+
+## Future Enhancements
+
+- Groq LLM Integration
+- AI Question Answering
+- AI Summarization
+- Quiz Generation
+- Chat-Based PDF Assistant
+
