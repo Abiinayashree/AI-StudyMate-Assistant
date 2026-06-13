@@ -1,9 +1,0 @@
-streamlit
-langchain
-langchain-text-splitters
-langchain-groq
-pypdf
-sentence-transformers
-faiss-cpu
-numpy
-python-dotenv
