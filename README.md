@@ -22,7 +22,7 @@ The objective of this project is to simplify the learning process by leveraging 
 - Streamlit
 - LangChain
 - Groq API
-- Llama 3.3 70B Versatile
+- openai/gpt-oss-120b
 - FAISS Vector Database
 - Sentence Transformers
 - PyPDF
